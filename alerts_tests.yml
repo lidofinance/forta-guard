@@ -1,0 +1,29 @@
+rule_files:
+  - alerts.yml
+
+tests:
+  - interval: 1m
+    input_series:
+      - series: 'forta_guard_health_info{}'
+        values: '1 0 0 0 1'
+    alert_rule_test:
+      - alertname: FortaGuardDown
+        eval_time: 1m
+        exp_alerts: []
+
+      - alertname: FortaGuardDown
+        eval_time: 2m
+        exp_alerts: []
+
+      - alertname: FortaGuardDown
+        eval_time: 3m
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+            exp_annotations:
+              description: "FortaGuard service doesn't work. Need to restart service"
+              summary: 'Health check launches every 60 seconds. The FortaGuard is not sending heartbeats'
+
+      - alertname: FortaGuardDown
+        eval_time: 4m
+        exp_alerts: []

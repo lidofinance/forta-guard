@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  web:
+    build: ./
+    restart: always
+    hostname: forta-guard-web
+    container_name: forta-guard-web
+    env_file:
+      - .env
+    environment:
+      - APP_NAME=${APP_NAME}
+      - NODE_ENV=${NODE_ENV}
+      - PORT=${PORT}
+      - MANTLE_URL=${MANTLE_URL}
+    ports:
+      - '${PORT}:${PORT}'
+    healthcheck:
+      test: wget -nv -t1 --spider http://localhost:$PORT/health > /dev/null || exit 1
+      interval: 10s
+      retries: 5
+      start_period: 5s
+      timeout: 10s

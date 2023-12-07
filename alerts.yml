@@ -1,0 +1,11 @@
+groups:
+  - name: node_operators_backend
+    rules:
+      - alert: FortaGuardDown
+        expr: forta_guard_health_info == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          description: "FortaGuard service doesn't work. Need to restart service"
+          summary: 'Health check launches every 60 seconds. The FortaGuard is not sending heartbeats'
